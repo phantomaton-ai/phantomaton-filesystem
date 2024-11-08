@@ -1,4 +1,4 @@
-import Storage from 'phantomaton-persistence/storage.js';
+import { Storage } from 'phantomaton-persistence';
 import path from 'path';
 import { promises as fs } from 'fs';
 
@@ -10,15 +10,8 @@ class Filesystem extends Storage {
 
   async load(id) {
     const file = path.join(this.directory, `${id}.json`);
-    try {
-      const data = await fs.readFile(file, 'utf-8');
-      return JSON.parse(data);
-    } catch (err) {
-      if (err.code === 'ENOENT') {
-        return null;
-      }
-      throw err;
-    }
+    const data = await fs.readFile(file, 'utf-8');
+    return JSON.parse(data);
   }
 
   async save(id, object) {
