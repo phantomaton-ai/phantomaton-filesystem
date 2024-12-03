@@ -2,7 +2,7 @@
 
 The Phantomaton Filesystem module provides a local file system-based storage implementation for the Phantomaton persistence layer. It allows Phantomaton projects to store and retrieve data using the local file system.
 
-## Usage 🛠️
+## Installation ⚙️
 
 To use the Phantomaton Filesystem module, you'll need to install it in your Phantomaton application. This can be done by adding the following to your Phantomaton system prompt:
 
@@ -10,7 +10,9 @@ To use the Phantomaton Filesystem module, you'll need to install it in your Phan
 /install(module:phantomaton-filesystem)
 ```
 
-Once the module is installed, you can resolve the `persistence.storage` extension point to access the file system storage provider:
+## Usage 🛠️
+
+Once the module is installed, other plugins can resolve the `persistence.storage` extension point to access the file system storage provider:
 
 ```javascript
 import plugins from 'phantomaton-plugins';
