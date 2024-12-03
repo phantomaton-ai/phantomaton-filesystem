@@ -3,7 +3,6 @@ import { promises as fs } from 'fs';
 
 class Filesystem {
   constructor(directory) {
-    super();
     this.directory = directory;
   }
 

@@ -8,51 +8,42 @@ import filesystem from './phantomaton-filesystem.js';
 import Filesystem from './filesystem.js';
 
 describe('Phantomaton Filesystem Plugin', () => {
+  const data = { id: 'test', data: 'test-data' };
+  const update = { ...data, data: 'updated-data' };
+  const options = { directory: 'custom/path' };
   let container;
 
   beforeEach(() => {
+    const plugins = [persistence(), filesystem(options)];
     container = hierophant();
-    container.install(filesystem.plugin());
-  });
-
-  it('provides the storage extension point', () => {
-    const [getStorage] = container.resolve(persistence.storage.resolve);
-    expect(getStorage).to.be.a('function');
+    plugins.forEach(
+      plugin => plugin.install.forEach(
+        extension => container.install(extension)
+      )
+    );
   });
 
   it('uses the Filesystem provider', async () => {
-    const [getStorage] = container.resolve(persistence.storage.resolve);
-    const storage = await getStorage();
+    const [storage] = container.resolve(persistence.storage.resolve);
     expect(storage).to.be.an.instanceOf(Filesystem);
   });
 
   it('loads and saves data using the Filesystem provider', async () => {
-    const [getStorage] = container.resolve(persistence.storage.resolve);
-    const storage = await getStorage();
+    const [storage] = container.resolve(persistence.storage.resolve);
 
-    const readFileStub = stub(fs, 'readFile').resolves(JSON.stringify({ id: 'test', data: 'test-data' }));
-    const writeFileStub = stub(fs, 'writeFile').resolves();
+    stub(fs, 'readFile').resolves(JSON.stringify(data));
+    stub(fs, 'writeFile').resolves();
 
     const loaded = await storage.load('test');
-    expect(loaded).to.deep.equal({ id: 'test', data: 'test-data' });
-    expect(readFileStub).to.have.been.calledWith(path.join('data/files', 'test.json'), 'utf-8');
+    expect(loaded).to.deep.equal(data);
+    expect(fs.readFile.calledWith(path.join('custom/path', 'test.json'), 'utf-8')).to.be.true;
 
-    const saved = await storage.save('test', { id: 'test', data: 'updated-data' });
-    expect(saved).to.deep.equal({ id: 'test', data: 'updated-data' });
-    expect(writeFileStub).to.have.been.calledWith(path.join('data/files', 'test.json'), JSON.stringify({ id: 'test', data: 'updated-data' }));
+    await storage.save('test', update);
+    expect(fs.writeFile.calledWith(path.join('custom/path', 'test.json'), JSON.stringify(update))).to.be.true;
   });
 
   it('uses the configured directory', async () => {
-    const customFilesystem = filesystem.plugin({
-      configuration: {
-        directory: 'custom/path'
-      }
-    });
-
-    container.install(customFilesystem);
-    const [getStorage] = container.resolve(persistence.storage.resolve);
-    const storage = await getStorage();
-    expect(storage).to.be.an.instanceOf(Filesystem);
+    const [storage] = container.resolve(persistence.storage.resolve);
     expect(storage.directory).to.equal('custom/path');
   });
 });
