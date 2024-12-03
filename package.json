@@ -20,5 +20,8 @@
   "type": "module",
   "devDependencies": {
     "lovecraft": "^1.0.3"
+  },
+  "dependencies": {
+    "phantomaton-persistence": "^0.0.1"
   }
 }
