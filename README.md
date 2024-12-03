@@ -4,9 +4,11 @@ The Phantomaton Filesystem module provides a local file system-based storage imp
 
 ## Usage 🛠️
 
-The Phantomaton Filesystem module registers itself as a provider for the `persistence.storage` extension point. This means that other Phantomaton plugins can use the `storage` extension point to access the file system-based storage implementation.
+To use the Phantomaton Filesystem module, you'll need to install it in your Phantomaton application. This can be done by adding the following to your Phantomaton system prompt:
 
-To use the Phantomaton Filesystem module, you'll need to install it in your Phantomaton application. For more information on installation, please refer to the [Phantomaton project documentation](https://github.com/phantomaton-ai/phantomaton#readme).
+```
+/install(module:phantomaton-filesystem)
+```
 
 Once the module is installed, you can resolve the `persistence.storage` extension point to access the file system storage provider:
 
@@ -48,6 +50,8 @@ myPlugin.install.forEach(extension => container.install(extension));
 ```
 
 If no configuration is provided, the module will use the `'data/files'` directory by default.
+
+For more information on Phantomaton's configuration system, please refer to the [Phantomaton project documentation](https://github.com/phantomaton-ai/phantomaton#configuration-).
 
 ## Contributing 🦄
 
