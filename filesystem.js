@@ -1,8 +1,7 @@
-import { Storage } from 'phantomaton-persistence';
 import path from 'path';
 import { promises as fs } from 'fs';
 
-class Filesystem extends Storage {
+class Filesystem {
   constructor(directory) {
     super();
     this.directory = directory;
